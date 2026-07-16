@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,9 @@ export default function RootLayout({ children }) {
         <body className="min-h-full flex flex-col">
           {/* header */}
           <Header />
-          <main className="mainLayout min-h-screen">{children}</main>
+          <TooltipProvider>
+            <main className="mainLayout min-h-screen">{children}</main>
+          </TooltipProvider>
           <Toaster richColors />
           {/* footer */}
           <footer className="bg-blue-50 py-12">

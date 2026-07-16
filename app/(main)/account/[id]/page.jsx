@@ -2,8 +2,9 @@ import { getAccountWithTransactions } from "@/actions/accounts";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 import { BarLoader } from "react-spinners";
-import TransactionTable from "../_components/TransactionTable";
+// import TransactionTable from "../_components/TransactionTable";
 import AccountChart from "../_components/AccountChart";
+import { TransactionTablePaginated } from "../_components/TransactionsTablePaginated";
 
 const AccountPage = async ({ params }) => {
   const { id } = await params;
@@ -29,7 +30,7 @@ const AccountPage = async ({ params }) => {
 
         <div className="text-right pb-2">
           <div className="text-xl sm:text-2xl font-bold">
-            ₹{parseFloat(account.balance).toFixed(2)}
+            ${parseFloat(account.balance).toFixed(2)}
           </div>
           <p className="text-sm text-muted-foreground">
             {account._count.transactions} Transactions
@@ -44,7 +45,7 @@ const AccountPage = async ({ params }) => {
 
       {/* Transactions Table */}
       <Suspense fallback={<BarLoader className="mt-4" width={"100%"} color="#9333ea" />}>
-        <TransactionTable transactions={transactions} />
+        <TransactionTablePaginated transactions={transactions} />
       </Suspense>
     </div>
   );
