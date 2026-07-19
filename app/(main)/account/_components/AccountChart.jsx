@@ -31,8 +31,6 @@ const DATE_RANGES = {
 };
 
 const AccountChart = ({ transactions }) => {
-  console.log(transactions[0]);
-
   const [dateRange, setDateRange] = useState("1M");
 
   const filteredData = useMemo(() => {
@@ -62,8 +60,6 @@ const AccountChart = ({ transactions }) => {
     // Convert to array and sort by date
     return Object.values(grouped).sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [transactions, dateRange]);
-
-  console.log(filteredData);
 
   const totals = useMemo(() => {
     return filteredData.reduce(

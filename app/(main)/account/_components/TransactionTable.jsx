@@ -57,7 +57,6 @@ const RECURRING_INTERVALS = {
 };
 
 const TransactionTable = ({ transactions }) => {
-  console.log(transactions[0]);
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState([]);
 
