@@ -3,6 +3,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { request } from "@arcjet/next";
+import aj from "@/lib/arcjet";
 
 const serializeTransaction = (obj) => {
   const serialized = { ...obj };
@@ -57,6 +59,32 @@ export async function createAccount(data) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorised");
 
+    // Get request data for ArcJet
+    const req = await request();
+
+    // Check rate limit
+    const decision = await aj.protect(req, {
+      userId,
+      requested: 1, // Specify how many tokens to consume
+    });
+
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        const { remaining, reset } = decision.reason;
+        console.error({
+          code: "RATE_LIMIT_EXCEEDED",
+          details: {
+            remaining,
+            resetInSeconds: reset,
+          },
+        });
+
+        throw new Error("Too many requests. Please try again later.");
+      }
+
+      throw new Error("Request blocked");
+    }
+
     const user = await db.user.findUnique({
       where: { clerkUserId: userId },
     });
@@ -104,4 +132,24 @@ export async function createAccount(data) {
   } catch (error) {
     throw new Error(error.message);
   }
+}
+
+export async function getDashboardData() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorised");
+
+  const user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const transaction = await db.transaction.findMany({
+    where: { userId: user.id },
+    orderBy: { date: "desc" },
+  });
+
+  return transaction.map(serializeTransaction);
 }
