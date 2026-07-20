@@ -5,8 +5,7 @@ import AddTransactionForm from "../_components/AddTransactionForm";
 import { defaultCategories } from "@/data/categories";
 
 async function AddTransactionPage({ searchParams }) {
-  const { params } = await searchParams;
-  const editId = params?.edit;
+  const { edit: editId } = await searchParams;
 
   const accounts = await getUserAccounts();
 
@@ -20,7 +19,9 @@ async function AddTransactionPage({ searchParams }) {
   return (
     <div className="max-w-3xl mx-auto px-5">
       <div className="flex justify-center md:justify-normal mb-8">
-        <h1 className="text-5xl gradient-title ">Add Transaction</h1>
+        <h1 className="text-5xl gradient-title ">
+          {editId ? "Edit Transaction" : "Add Transaction"}
+        </h1>
       </div>
       <AddTransactionForm
         accounts={accounts}

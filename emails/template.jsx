@@ -149,7 +149,7 @@ export default function EmailTemplate({ userName = "", type = "monthly-report", 
             {/* AI Insights */}
             {data?.insights && (
               <Section style={styles.section}>
-                <Heading style={styles.heading}>Welth Insights</Heading>
+                <Heading style={styles.heading}>Finzora Insights</Heading>
                 {data.insights.map((insight, index) => (
                   <Text key={index} style={styles.text}>
                     • {insight}
@@ -159,7 +159,7 @@ export default function EmailTemplate({ userName = "", type = "monthly-report", 
             )}
 
             <Text style={styles.footer}>
-              Thank you for using Welth. Keep tracking your finances for better financial health!
+              Thank you for using Finzora. Keep tracking your finances for better financial health!
             </Text>
           </Container>
         </Body>
